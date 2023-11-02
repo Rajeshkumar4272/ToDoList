@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDoList</title>
+    <link rel="stylesheet" href="dist/output.css">
+</head>
+<body class="bg-gray-50 p-4 space-y-4">
+    <h1 class="font-bold text-4xl mt-5  rou">ToDo List</h1>
+    <script>
+        const todo = {
+            todos: JSON.parse(localStorage.getItem('todos')) || [],
+            form: {
+                tag: document.createElement('form'),
+                attri: {
+                    action: "#",
+                    id: 'todoform'
+                },
+                createInput: {
+                    tag: document.createElement('input'),
+                    attri: {
+                        type: "text",
+                        className: 'w-96 h-9 border-black border rounded-md pl-2',
+                        id: 'input',
+                        placeholder: 'Add some task',
+                    }
+                },
+                addbtn1: {
+                    tag: document.createElement('button'),
+                    attri: {
+                        type: 'submit',
+                        className: '  py-2 px-8  ml-5 font-medium rounded-lg bg-gradient-to-r from-purple-500 to-blue-500  text-white '
+                    }
+                }
+            },
+            table: {
+                tag: document.createElement('table'),
+
+                attri: {
+                    className: ' w-96 rounded-md',
+                    id: 'table',
+                    name: 'formname'
+                },
+                tableHead: {
+                    tag: document.createElement('thead'),
+
+                    headrow: {
+                        tag: document.createElement('tr'),
+                        attri: {
+                            className: 'text-medium border-black border w-1/2 rounded-md'
+                        },
+                        th1: {
+                            tag: document.createElement('th'),
+                            attri: {
+                                // className: ' '
+                            }
+                        },
+                        th2: {
+                            tag: document.createElement('th'),
+                            attri: {
+                                className: ' text-medium border-black border w-1/2'
+                            }
+
+                        }
+                    }
+                },
+                tablebody: {
+                    tag: document.createElement('tbody'),
+                    attri: {
+                        id: 'tbody',
+                        attri: {
+                            className: 'border- black border '
+                        }
+                    }
+                }
+            },
+            baseStructure: function () {
+                // let form = Object.assign
+                let form = this.form.tag
+                Object.assign(form, this.form.attri)
+                document.body.appendChild(form)
+                // inputbox created
+                let inputbox = this.form.createInput.tag
+                Object.assign(inputbox, this.form.createInput.attri)
+                form.appendChild(inputbox)
+                // addbtn1 created
+                let addbtn1 = this.form.addbtn1.tag
+                Object.assign(addbtn1, this.form.addbtn1.attri)
+                addbtn1.innerHTML = 'Add'
+                form.appendChild(addbtn1)
+                // newDiv created
+                let newDiv = document.createElement('div')
+                newDiv.setAttribute('class', 'border p-4')
+                document.body.appendChild(newDiv)
+                // drop down
+                let selectOption = document.createElement('select')
+                selectOption.setAttribute('class', 'border p-2')
+                selectOption.setAttribute('id', 'filterOption')
+                let option1 = document.createElement('option')
+                option1.innerHTML = 'all'
+                option1.value = 'all';
+                let option2 = document.createElement('option')
+                option2.innerHTML = 'incomplete'
+                option2.value = 'incomplete';
+                let option3 = document.createElement('option')
+                option3.innerHTML = 'completed'
+                option3.value = 'completed';
+                selectOption.append(option1, option2, option3)
+                newDiv.appendChild(selectOption)
+                // search box created 
+                let searchBox = document.createElement('input')
+                searchBox.setAttribute('class', 'ml-2  border p-2')
+                searchBox.setAttribute('id', 'searchBox')
+                searchBox.setAttribute('placeholder', 'search')
+                searchBox.setAttribute('type', 'search')
+                newDiv.appendChild(searchBox)
+
+                let table = this.table.tag
+                Object.assign(table, this.table.attri)
+                document.body.appendChild(table)
+
+                // table head created
+                let tableHead = this.table.tableHead.tag
+                Object.assign(tableHead, this.table.attri)
+                // console.log(tableHead);
+                table.appendChild(tableHead)
+
+                // table row tag get 
+                let headrow = this.table.tableHead.headrow.tag
+                Object.assign(headrow, this.table.tableHead.headrow.attri)
+                tableHead.appendChild(headrow)
+                // console.log(headrow);
+                // th1  created
+                let th1 = this.table.tableHead.headrow.th1.tag
+                Object.assign(th1, this.table.tableHead.headrow.th1.attri)
+                th1.innerHTML = 'Name'
+                headrow.appendChild(th1)
+
+                // th2 created
+                let th2 = this.table.tableHead.headrow.th2.tag
+                Object.assign(th2, this.table.tableHead.headrow.th2.attri)
+                th2.innerHTML = 'Action'
+                headrow.appendChild(th2)
+
+                // table body start
+                let tbody = this.table.tablebody.tag
+                Object.assign(tbody, this.table.tablebody.attri)
+                table.appendChild(tbody)
+            },
+            updateLocalstorage: function () {
+                localStorage.setItem('todos', JSON.stringify(this.todos))
+            },
+            addToTodos: function (value) {
+                if (!value) {
+                    alert('enter task')
+                }
+                let task = {
+                    taskId: Date.now(),
+                    taskName: value,
+                    taskStatus: 'incomplete'
+
+                }
+                // console.log(task);
+                this.todos.push(task)
+                this.updateLocalstorage()
+            },
+            deleteTask: function () {
+                console.log(this);
+            },
+
+            addToUi: function (arr) {
+                let inputValue = document.querySelector('#input').value.trim()
+
+                if (inputValue) {
+                    document.querySelector('#input').value = '';
+                    this.addToTodos(inputValue);
+                }
+                let taskArray = arr ? arr : this.todos;
+                let tbody = document.querySelector('#tbody')
+                tbody.innerHTML = ""
+                taskArray.forEach((task) => {
+
+                    let tableRow = document.createElement('tr')
+                    tableRow.setAttribute('class', ' text-center border-black border whitespace-nowrap')
+                    tableRow.setAttribute('data-taskId', task.taskId)
+                    tbody.appendChild(tableRow)
+
+                    let td1 = document.createElement('td')
+                    td1.setAttribute('class', 'border-black border  whitespace-nowrap')
+                    td1.innerHTML = task.taskName
+                    tableRow.appendChild(td1)
+
+                    let td2 = document.createElement('td')
+                    td2.setAttribute('class', 'flex justify-center gap-5 p-2 ')
+
+                    let completebtn = document.createElement('button')
+                    completebtn.setAttribute('class', 'bg-blue-500 text-white border font-bold py-2 px-4 rounded')
+                    completebtn.setAttribute('data-btnType', 'taskStatusBtn')
+                    completebtn.innerHTML = task.taskStatus
+                    td2.appendChild(completebtn)
+
+                    let deletebtn = document.createElement('button')
+                    deletebtn.setAttribute('class', ' bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded flex items-center')
+                    deletebtn.setAttribute('data-btnType', 'taskRemovebtn')
+                    deletebtn.innerHTML = 'Delete'
+                    td2.appendChild(deletebtn)
+                    tableRow.appendChild(td2)
+                    tbody.appendChild(tableRow)
+
+                    tableRow.addEventListener('click', (event) => {
+                        // console.log(event.target.getAttribute('data-btnType'));
+                        let rowId = event.target.parentNode.parentNode.getAttribute('data-taskid')
+                        let matched = this.todos.filter((task) => task.taskId === +rowId)
+                        let itemAt = this.todos.indexOf(matched[0]);
+
+                        if (event.target.getAttribute('data-btnType') === 'taskStatusBtn') {
+                            if (this.todos[itemAt].taskStatus.toLowerCase() === 'incomplete') {
+                                this.todos[itemAt].taskStatus = 'completed'
+                                event.target.style.backgroundColor = 'Green'
+                                event.target.innerHTML = this.todos[itemAt].taskStatus;
+                                event.target.parentNode.parentNode.children[0].style.textDecoration = 'line-through'
+                                this.updateLocalstorage()
+                                // console.log(this.todos[itemAt]);
+                            }
+                            else {
+                                this.todos[itemAt].taskStatus = 'incomplete'
+                                event.target.innerHTML = this.todos[itemAt].taskStatus;
+                                event.target.style.backgroundColor = 'red'
+                                event.target.parentNode.parentNode.children[0].style.textDecoration = 'none'
+
+                                this.updateLocalstorage()
+                            }
+                        }
+
+                        if (event.target.getAttribute('data-btnType') === 'taskRemovebtn') {
+                            this.todos = this.todos.filter((task) => task.taskId !== +rowId)
+                            this.updateLocalstorage()
+                            event.target.parentNode.parentNode.remove()
+
+                        }
+                    })
+
+                });
+            },
+            filterList: function () {
+                let filterVal = document.querySelector('#filterOption').value
+                if (filterVal.toLowerCase() === 'all') {
+                    this.addToUi(this.todos);
+                }
+                if (filterVal.toLowerCase() === 'completed') {
+                    let completed = this.todos.filter((item) => item.taskStatus.toLowerCase() === 'completed')
+                    this.addToUi(completed);
+
+                }
+                if (filterVal.toLowerCase() === 'incomplete') {
+                    let incomplete = this.todos.filter((item) => item.taskStatus.toLowerCase() === 'incomplete')
+                    this.addToUi(incomplete);
+
+                }
+            },
+            searchBox: function () {
+                let inputValue = document.querySelector('#searchBox').value.toLowerCase().trim();
+                let filterResult = this.todos.filter((item) => item.taskName.toLowerCase().startsWith(inputValue));
+                this.addToUi(filterResult)
+            }
+        }
+        todo.baseStructure()
+        window.onload = todo.addToUi()
+        document.querySelector('#todoform').addEventListener('submit', (e) => {
+            e.preventDefault();
+            todo.addToUi()
+
+        })
+        document.querySelector('#filterOption').addEventListener('change', () => {
+            todo.filterList()
+        })
+        document.querySelector('#searchBox').addEventListener('input', () => {
+            todo.searchBox()
+        })
+    </script>
+</body>
+</html>
