@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SetInterval</title>
+    <link rel="stylesheet" href="dist/output.css">
+</head>
+
+<body>
+
+    <!-- Q Write a function printNumbers(from, to) that outputs
+a number every second, starting from from and ending with to.
+Make two variants of the solution.
+Using setInterval.
+Using nested setTimeout. -->
+    
+    <button type="button" id="startBtn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Start</button>
+    <button type="button" id="stopBtn" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">End </button>
+
+    <script>
+        (function () {
+            "use strict";
+            /* Q Write a function printNumbers(from, to) that outputs a number every second, starting from from and ending with to.
+                Make two variants of the solution.
+                Using setInterval.
+                Using nested setTimeout.*/
+            // function printNumbers(from, to) {
+            //     let setIntervalId = setInterval(function () {
+            //         console.log(from);
+            //         if (from == to) {
+            //             clearInterval(setIntervalId)
+            //         }
+            //         from++
+            //     }, 1000)
+            // }
+            // printNumbers(1, 5);
+            // Using nested setTimeout
+            function printNumbers(from, to) {
+                setTimeout(function test() {
+                    console.log(from);
+                    from++
+                    if (from <= to) {
+                        setTimeout(test, 1000)
+                    }
+                }, 1000)
+            }
+            printNumbers(1, 5)
+
+            /* Q2 Write a function to create two button start or stop. When we click start it will start printing hii until we click on stop.*/
+            
+            let timerId;
+            function start() {
+                let p = document.createElement('p')
+                p.innerHTML='Hii'
+                document.body.appendChild(p)
+            }
+            document.querySelector("#startBtn").addEventListener("click", () => {
+                timerId = setInterval(start, 1000)
+            })
+            document.querySelector("#stopBtn").addEventListener("click", () => {
+                clearInterval(timerId)
+            })
+        })()
+
+    </script>
+</body>
+
+</html>
